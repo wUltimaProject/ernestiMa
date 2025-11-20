@@ -1,8 +1,8 @@
-# Ernestima
+# ErnestiMa
 
 Web application per la stima di progetti software utilizzando il metodo **Use Case Points (UCP)**.
 
-**Ernestima** è un gioco di parole tra "Ernesta" (nome di donna) e "stima", perché l'app aiuta a stimare progetti software in modo preciso e professionale.
+**ErnestiMa** è un gioco di parole tra "Ernesta" (nome di donna) e "stima", perché l'app aiuta a stimare progetti software in modo preciso e professionale.
 
 ## Stack Tecnologico
 

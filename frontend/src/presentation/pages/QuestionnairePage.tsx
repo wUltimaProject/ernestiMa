@@ -11,6 +11,7 @@ import { useQuestionnaire } from "../../application/useQuestionnaire";
 import { UCPCalculator } from "../../domain/ucpCalculator";
 import { ResultsPage } from "./ResultsPage";
 import { QuestionType } from "../../domain/types";
+import { GlassesIcon } from "../components/GlassesIcon";
 
 type Step =
   | "use_cases_count"
@@ -158,8 +159,15 @@ export function QuestionnairePage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Ernestima</h1>
-          <p className="text-gray-600">Stima Progetti Software con il metodo Use Case Points</p>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-16 h-16 bg-green-200/30 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-green-300/50 transform rotate-3 hover:rotate-0 transition-transform duration-300 text-green-700">
+              <GlassesIcon className="w-10 h-10" />
+            </div>
+            <h1 className="text-5xl font-extrabold text-green-600 drop-shadow-sm">
+              Ernesti<span className="text-green-500">Ma</span>
+            </h1>
+          </div>
+          <p className="text-gray-600 text-lg">Stima Progetti Software con il metodo Use Case Points</p>
         </div>
         {currentStep === "use_cases_count" && (
           <div className="max-w-3xl mx-auto">
@@ -180,14 +188,14 @@ export function QuestionnairePage() {
               onNext={() => handleUseCasesCount(useCasesCount)}
               isFirst={true}
             />
-            <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-blue-800 mb-3">
+            <div className="mt-6 bg-green-50/50 backdrop-blur-sm border-l-4 border-green-300/70 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-green-800 mb-3">
                 💡 Esempi di funzionalità (casi d'uso)
               </h3>
-              <p className="text-sm text-blue-700 mb-3">
+              <p className="text-sm text-green-800 mb-3">
                 Una funzionalità è qualcosa che l'utente può fare con il sistema. Ecco alcuni esempi:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-sm text-blue-700">
+              <ul className="list-disc list-inside space-y-2 text-sm text-green-800">
                 <li><strong>Login/Registrazione:</strong> L'utente può accedere al sistema o creare un account</li>
                 <li><strong>Gestione profilo:</strong> L'utente può modificare i propri dati personali</li>
                 <li><strong>Ricerca prodotti:</strong> L'utente può cercare prodotti nel catalogo</li>
@@ -197,7 +205,7 @@ export function QuestionnairePage() {
                 <li><strong>Notifiche:</strong> Il sistema invia notifiche agli utenti</li>
                 <li><strong>Gestione documenti:</strong> L'utente può caricare, visualizzare o scaricare documenti</li>
               </ul>
-              <p className="text-sm text-blue-600 mt-4 italic">
+              <p className="text-sm text-green-700 mt-4 italic">
                 💬 <strong>Suggerimento:</strong> Pensa a tutte le azioni principali che gli utenti possono compiere con il sistema. Ogni azione significativa è una funzionalità!
               </p>
             </div>
@@ -239,7 +247,7 @@ export function QuestionnairePage() {
               onNext={() => handleActorsCount(actorsCount)}
               isFirst={false}
             />
-            <div className="mt-6 bg-green-50 border-l-4 border-green-400 p-6 rounded-lg">
+            <div className="mt-6 bg-green-50/50 backdrop-blur-sm border-l-4 border-green-300/70 p-6 rounded-lg">
               <h3 className="text-lg font-semibold text-green-800 mb-3">
                 👥 Cosa sono gli attori?
               </h3>
@@ -249,7 +257,7 @@ export function QuestionnairePage() {
               <p className="text-sm text-green-700 mb-3">
                 <strong>Interagire significa:</strong> inviare dati al sistema, ricevere informazioni dal sistema, o far eseguire operazioni al sistema.
               </p>
-              <div className="bg-white p-4 rounded border border-green-200 mb-3">
+              <div className="bg-white/60 backdrop-blur-sm p-4 rounded border border-green-200/50 mb-3">
                 <p className="text-sm font-semibold text-green-800 mb-2">Esempi di attori:</p>
                 <ul className="list-disc list-inside space-y-2 text-sm text-green-700">
                   <li><strong>Utente finale:</strong> La persona che usa l'applicazione (es. cliente che fa un ordine, dipendente che inserisce dati)</li>
@@ -412,41 +420,41 @@ function UseCaseForm({
             <option value="average">Medio</option>
             <option value="complex">Complesso</option>
           </select>
-          <div className="mt-3 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-            <p className="text-sm font-semibold text-yellow-800 mb-2">
+          <div className="mt-3 bg-green-50/50 backdrop-blur-sm border-l-4 border-green-300/70 p-4 rounded">
+            <p className="text-sm font-semibold text-green-800 mb-2">
               ⚠️ Come determinare la complessità (secondo metodologia UCP ufficiale):
             </p>
-            <p className="text-xs text-yellow-700 mb-3">
+            <p className="text-xs text-green-800 mb-3">
               <strong>La complessità UCP si basa SOLO sul numero di transazioni</strong> (interazioni attore-sistema con risultato visibile).
             </p>
             
-            <div className="text-xs text-yellow-700 mb-3 bg-blue-50 p-3 rounded border border-blue-200">
-              <p className="font-semibold text-blue-800 mb-2">📋 Cosa sono le transazioni?</p>
-              <p className="text-yellow-700 mb-2">
+            <div className="text-xs text-green-800 mb-3 bg-green-50/30 backdrop-blur-sm p-3 rounded border border-green-200/50">
+              <p className="font-semibold text-green-800 mb-2">📋 Cosa sono le transazioni?</p>
+              <p className="text-green-800 mb-2">
                 Una <strong>transazione</strong> è ogni scambio di informazioni tra l'utente (o sistema esterno) e il software che produce un risultato visibile o un cambiamento di stato.
               </p>
-              <p className="text-yellow-700 mb-2">Esempi di transazioni:</p>
-              <ul className="list-disc list-inside space-y-1 text-yellow-700 ml-2">
+              <p className="text-green-800 mb-2">Esempi di transazioni:</p>
+              <ul className="list-disc list-inside space-y-1 text-green-800 ml-2">
                 <li>L'utente inserisce dati in un form e clicca "Salva" → 1 transazione</li>
                 <li>Il sistema valida i dati e mostra un messaggio → 1 transazione</li>
                 <li>L'utente cerca qualcosa e il sistema mostra i risultati → 1 transazione</li>
                 <li>L'utente seleziona un'opzione e il sistema aggiorna la schermata → 1 transazione</li>
                 <li>L'utente conferma un'azione e il sistema esegue un'operazione → 1 transazione</li>
               </ul>
-              <p className="text-yellow-600 mt-2 italic">
+              <p className="text-green-700 mt-2 italic">
                 💡 <strong>In pratica:</strong> Conta ogni volta che l'utente fa qualcosa (click, inserimento dati, selezione) e il sistema risponde o cambia qualcosa di visibile.
               </p>
             </div>
 
-            <p className="text-xs text-yellow-700 mb-2">
+            <p className="text-xs text-green-800 mb-2">
               <strong>NON dipende da:</strong> difficoltà tecnica, skill richieste, tempo di sviluppo, esperienza necessaria.
             </p>
-            <div className="text-xs text-yellow-700 space-y-2 mt-3 bg-white p-3 rounded border border-yellow-300">
+            <div className="text-xs text-green-800 space-y-2 mt-3 bg-white/50 backdrop-blur-sm p-3 rounded border border-green-200/50">
               <p><strong>🔵 Semplice:</strong> fino a 3 transazioni</p>
               <p><strong>🟡 Medio:</strong> 4-7 transazioni</p>
               <p><strong>🔴 Complesso:</strong> più di 7 transazioni</p>
             </div>
-            <div className="text-xs text-yellow-600 mt-3 space-y-1">
+            <div className="text-xs text-green-700 mt-3 space-y-1">
               <p className="font-semibold">💡 Esempi pratici:</p>
               <p>• Task tecnicamente semplice ma con molti passi (&gt;7 transazioni) = <strong>Complesso</strong></p>
               <p>• Task che richiede skill avanzate ma ha pochi passi (≤3 transazioni) = <strong>Semplice</strong></p>
@@ -464,7 +472,7 @@ function UseCaseForm({
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
             {index === total ? "Avanti" : "Prossimo Caso d'Uso"}
           </button>
@@ -543,16 +551,16 @@ function ActorForm({
             <option value="average">Medio (sistema via protocollo)</option>
             <option value="complex">Complesso (persona)</option>
           </select>
-          <div className="mt-3 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-            <p className="text-xs font-semibold text-blue-800 mb-2">
+          <div className="mt-3 bg-green-50/50 backdrop-blur-sm border-l-4 border-green-300/70 p-4 rounded">
+            <p className="text-xs font-semibold text-green-800 mb-2">
               📋 Come scegliere il tipo di attore (secondo metodologia UCP ufficiale):
             </p>
-            <div className="text-xs text-blue-700 space-y-2">
+            <div className="text-xs text-green-800 space-y-2">
               <p><strong>🔵 Semplice (peso 1):</strong> Un altro sistema software che comunica con il tuo sistema tramite un'API ben definita e standardizzata. Esempi: sistema di pagamento (Stripe, PayPal), servizio di invio email (SendGrid), API di Google Maps, servizi esterni con interfacce programmate.</p>
               <p><strong>🟡 Medio (peso 2):</strong> Un sistema o utente che comunica usando protocolli standard (HTTP, FTP, TCP/IP). Esempi: server email, sistema di sincronizzazione dati, servizio di backup automatico, utenti che accedono via protocolli standard.</p>
               <p><strong>🔴 Complesso (peso 3):</strong> Un utente umano che usa il sistema tramite un'interfaccia grafica (GUI). Esempi: utente finale che usa l'applicazione, cliente che compra online, dipendente che inserisce dati tramite schermo, amministratore che gestisce il sistema con interfaccia grafica.</p>
             </div>
-            <p className="text-xs text-blue-600 mt-3 italic">
+            <p className="text-xs text-green-700 mt-3 italic">
               💡 <strong>Nota importante:</strong> L'utente finale (persona che usa la tua applicazione) è sempre un attore e viene classificato come <strong>Complesso</strong> (peso 3) perché interagisce tramite interfaccia grafica.
             </p>
           </div>
@@ -567,7 +575,7 @@ function ActorForm({
           </button>
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
             {index === total ? "Avanti" : "Prossimo Attore"}
           </button>

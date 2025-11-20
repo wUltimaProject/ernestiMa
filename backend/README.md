@@ -1,4 +1,4 @@
-# Ernestima Backend
+# ErnestiMa Backend
 
 Backend API per la stima di progetti software utilizzando il metodo Use Case Points (UCP).
 

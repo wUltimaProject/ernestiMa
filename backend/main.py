@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Ernestima API",
+    title="ErnestiMa API",
     description="API per la stima di progetti software utilizzando il metodo Use Case Points",
     version="1.0.0",
 )
@@ -22,7 +22,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Ernestima API", "version": "1.0.0"}
+    return {"message": "ErnestiMa API", "version": "1.0.0"}
 
 
 @app.get("/health")

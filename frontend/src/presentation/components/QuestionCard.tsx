@@ -74,7 +74,7 @@ export function QuestionCard({
                   onChange(question.minValue || 0);
                 }
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400 focus:border-green-400"
               required={question.required}
               placeholder={`Inserisci un valore tra ${question.minValue} e ${question.maxValue}`}
             />
@@ -90,7 +90,7 @@ export function QuestionCard({
                 />
                 <div className="flex justify-between text-sm text-gray-500 mt-1">
                   <span>{question.minValue}</span>
-                  <span className="font-semibold text-blue-600">
+                  <span className="font-semibold text-green-600">
                     {typeof value === "number" ? value : (question.minValue || 0)}
                   </span>
                   <span>{question.maxValue}</span>
@@ -108,7 +108,7 @@ export function QuestionCard({
             <select
               value={value as string}
               onChange={(e) => onChange(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400 focus:border-green-400"
               required={question.required}
             >
               <option value="">-- Seleziona --</option>
@@ -122,8 +122,8 @@ export function QuestionCard({
         )}
 
         {question.helpText && (
-          <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-            <div className="text-sm text-blue-700 whitespace-pre-line">{question.helpText}</div>
+          <div className="mt-6 bg-green-50/50 backdrop-blur-sm border-l-4 border-green-300/70 p-4 rounded">
+            <div className="text-sm text-green-800 whitespace-pre-line">{question.helpText}</div>
           </div>
         )}
 
@@ -146,7 +146,7 @@ export function QuestionCard({
             className={`px-6 py-2 rounded-md ${
               value === undefined || value === null || (typeof value === "number" && isNaN(value))
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-green-500 text-white hover:bg-green-600"
             }`}
           >
             {isLast ? "Calcola Stima" : "Avanti"}
