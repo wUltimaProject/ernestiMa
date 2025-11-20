@@ -1,34 +1,34 @@
 # ErnestiMa Backend
 
-Backend API per la stima di progetti software utilizzando il metodo Use Case Points (UCP).
+Backend API for software project estimation using the Use Case Points (UCP) method.
 
 ## Setup
 
-1. Crea un virtual environment:
+1. Create a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # su Windows: venv\Scripts\activate
+source venv/bin/activate  # on Windows: venv\Scripts\activate
 ```
 
-2. Installa le dipendenze:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configura il database:
-- Crea un database PostgreSQL chiamato `ucp_estimation`
-- Copia `.env.example` in `.env` e configura `DATABASE_URL`
+3. Configure the database:
+- Create a PostgreSQL database named `ucp_estimation`
+- Copy `.env.example` to `.env` and configure `DATABASE_URL`
 
-4. Avvia il server:
+4. Start the server:
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-L'API sarà disponibile su `http://localhost:8000`
+The API will be available at `http://localhost:8000`
 
-## Documentazione API
+## API Documentation
 
-Una volta avviato il server, la documentazione interattiva è disponibile su:
+Once the server is running, interactive documentation is available at:
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 

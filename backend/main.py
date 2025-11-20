@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="ErnestiMa API",
-    description="API per la stima di progetti software utilizzando il metodo Use Case Points",
+    description="API for software project estimation using the Use Case Points method",
     version="1.0.0",
 )
 

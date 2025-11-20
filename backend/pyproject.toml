@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ucp-estimation-backend"
 version = "1.0.0"
-description = "Backend API per stima progetti software con metodo UCP"
+description = "Backend API for software project estimation using UCP method"
 authors = ["Your Name <you@example.com>"]
 
 [tool.black]

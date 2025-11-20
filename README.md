@@ -1,17 +1,17 @@
 # ErnestiMa
 
-Web application per la stima di progetti software utilizzando il metodo **Use Case Points (UCP)**.
+Web application for software project estimation using the **Use Case Points (UCP)** method.
 
-**ErnestiMa** è un gioco di parole tra "Ernesta" (nome di donna) e "stima", perché l'app aiuta a stimare progetti software in modo preciso e professionale.
+**ErnestiMa** is a wordplay between "Ernesta" (a woman's name) and "stima" (estimation), because the app helps estimate software projects accurately and professionally.
 
-## Stack Tecnologico
+## Tech Stack
 
 - **Frontend**: React + TypeScript + Tailwind CSS
 - **Backend**: Python + FastAPI + SQLAlchemy
-- **Database**: PostgreSQL (locale)
-- **Architettura**: Clean Architecture
+- **Database**: PostgreSQL (local)
+- **Architecture**: Clean Architecture
 
-## Struttura Progetto
+## Project Structure
 
 ```
 stime_uucp/
@@ -30,23 +30,23 @@ stime_uucp/
 └── docs/              # Documentation
 ```
 
-## Metodologia UCP
+## UCP Methodology
 
-Il metodo Use Case Points (UCP) calcola la stima di un progetto software basandosi su:
+The Use Case Points (UCP) method calculates software project estimation based on:
 
 1. **UUCP** (Unadjusted Use Case Points) = UUCW + UAW
 2. **TCF** (Technical Complexity Factor)
 3. **ECF** (Environmental Complexity Factor)
-4. **UCP Finale** = UUCP × TCF × ECF
+4. **Final UCP** = UUCP × TCF × ECF
 
 ## Setup
 
-### Prerequisiti
+### Prerequisites
 - Node.js 18+
 - Python 3.11+
-- PostgreSQL 14+ (opzionale per ora, l'app funziona anche senza database)
+- PostgreSQL 14+ (optional for now, the app works without database)
 
-### Installazione
+### Installation
 
 ```bash
 # Frontend
@@ -56,43 +56,43 @@ npm install
 # Backend
 cd backend
 python -m venv venv
-source venv/bin/activate  # su Windows: venv\Scripts\activate
+source venv/bin/activate  # on Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Avvio
+### Running
 
 ```bash
-# Frontend (terminale 1)
+# Frontend (terminal 1)
 cd frontend
 npm run dev
-# L'app sarà disponibile su http://localhost:3002
+# The app will be available at http://localhost:3002
 
-# Backend (terminale 2) - Opzionale per ora
+# Backend (terminal 2) - Optional for now
 cd backend
 uvicorn main:app --reload
-# L'API sarà disponibile su http://localhost:8000
+# The API will be available at http://localhost:8000
 ```
 
-## Funzionalità Implementate
+## Implemented Features
 
-✅ Calcolo UCP completo (UUCP, TCF, ECF)
-✅ Questionario guidato con domande in linguaggio non tecnico
-✅ Carousel interattivo per la raccolta dati
-✅ Schermata risultati con dettagli della stima
-✅ Export risultati in formato TXT
+✅ Complete UCP calculation (UUCP, TCF, ECF)
+✅ Guided questionnaire with non-technical language questions
+✅ Interactive carousel for data collection
+✅ Results screen with estimation details
+✅ Export results to TXT format
 
-## Prossimi Sviluppi
+## Next Steps
 
-- [ ] Integrazione database PostgreSQL
-- [ ] Salvataggio storico stime
-- [ ] Training modello AI per migliorare le stime
-- [ ] Import stime da Excel
+- [ ] PostgreSQL database integration
+- [ ] Historical estimates saving
+- [ ] AI model training to improve estimates
+- [ ] Import estimates from Excel
 
-## Sviluppo
+## Development
 
-Il progetto segue il workflow Git:
-- `develop`: branch principale di sviluppo
-- `feature/*`: nuove funzionalità
-- Ogni modifica parte da `develop`
+The project follows Git workflow:
+- `develop`: main development branch
+- `feature/*`: new features
+- Every change starts from `develop`
 
