@@ -5,6 +5,11 @@ This file is used when deploying to Vercel
 import sys
 import os
 
+# Debug: print to verify this file is being executed
+print("🔍 backend/api/index.py is being loaded...", file=sys.stderr)
+print(f"🔍 Current working directory: {os.getcwd()}", file=sys.stderr)
+print(f"🔍 __file__ path: {__file__}", file=sys.stderr)
+
 # Get absolute path to backend directory
 # This file is in backend/api/index.py
 # We need to add backend/ to sys.path to import main
