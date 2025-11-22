@@ -41,12 +41,12 @@ app.add_middleware(
 app.include_router(router)
 
 
-@app.get("/")
+@app.get("/api/")
 async def root():
     return {"message": "ErnestiMa API", "version": "1.0.0"}
 
 
-@app.get("/health")
+@app.get("/api/health")
 async def health():
     return {"status": "healthy"}
 
