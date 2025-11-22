@@ -2,7 +2,6 @@
 
 Web application for software project estimation using the **Use Case Points (UCP)** method.
 
-**ErnestiMa** is a wordplay between "Ernesta" (a woman's name) and "stima" (estimation), because the app helps estimate software projects accurately and professionally.
 
 ## Tech Stack
 
