@@ -2,6 +2,7 @@
  * Pagina principale del questionario UCP
  */
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { QuestionCard } from "../components/QuestionCard";
 import {
   TECHNICAL_FACTOR_QUESTIONS,
@@ -14,6 +15,7 @@ import { QuestionType } from "../../domain/types";
 import { GlassesIcon } from "../components/GlassesIcon";
 
 type Step =
+  | "project_description"
   | "use_cases_count"
   | "use_cases"
   | "actors_count"
@@ -23,7 +25,9 @@ type Step =
   | "results";
 
 export function QuestionnairePage() {
-  const [currentStep, setCurrentStep] = useState<Step>("use_cases_count");
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState<Step>("project_description");
+  const [projectDescription, setProjectDescription] = useState<string>("");
   const [useCasesCount, setUseCasesCount] = useState<number>(0);
   const [actorsCount, setActorsCount] = useState<number>(0);
   const [currentUseCaseIndex, setCurrentUseCaseIndex] = useState(0);
@@ -152,7 +156,13 @@ export function QuestionnairePage() {
   };
 
   if (currentStep === "results" && estimation) {
-    return <ResultsPage estimation={estimation} />;
+    return (
+      <ResultsPage
+        estimation={estimation}
+        projectDescription={projectDescription}
+        questionnaireData={questionnaire.data}
+      />
+    );
   }
 
   return (
@@ -167,8 +177,41 @@ export function QuestionnairePage() {
               Ernesti<span className="text-green-500">Ma</span>
             </h1>
           </div>
-          <p className="text-gray-600 text-lg">Stima Progetti Software con il metodo Use Case Points</p>
+          <p className="text-gray-600 text-lg mb-4">Stima Progetti Software con il metodo Use Case Points</p>
+          <button
+            onClick={() => navigate("/estimations")}
+            className="text-green-600 hover:text-green-700 underline text-sm"
+          >
+            Vedi Storico Stime
+          </button>
         </div>
+        {currentStep === "project_description" && (
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Descrizione del Progetto
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Inserisci una breve descrizione del progetto che stai stimando. Questa descrizione ti aiuterà a identificare la stima in futuro.
+              </p>
+              <textarea
+                value={projectDescription}
+                onChange={(e) => setProjectDescription(e.target.value)}
+                placeholder="Es: Sistema di gestione ordini per e-commerce con integrazione pagamenti..."
+                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+              />
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setCurrentStep("use_cases_count")}
+                  disabled={!projectDescription.trim()}
+                  className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Avanti
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {currentStep === "use_cases_count" && (
           <div className="max-w-3xl mx-auto">
             <QuestionCard
