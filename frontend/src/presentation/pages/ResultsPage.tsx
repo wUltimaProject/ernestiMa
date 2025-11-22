@@ -1,14 +1,80 @@
 /**
  * Pagina dei risultati della stima UCP
  */
-import { UCPEstimation } from "../../domain/types";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UCPEstimation, QuestionnaireState } from "../../domain/types";
 import { GlassesIcon } from "../components/GlassesIcon";
+import { api } from "../../infrastructure/api";
 
 interface ResultsPageProps {
   estimation: UCPEstimation;
+  projectDescription: string;
+  questionnaireData: QuestionnaireState;
 }
 
-export function ResultsPage({ estimation }: ResultsPageProps) {
+export function ResultsPage({ estimation, projectDescription, questionnaireData }: ResultsPageProps) {
+  const navigate = useNavigate();
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    // Salva automaticamente la stima quando viene mostrata
+    saveEstimation();
+  }, []);
+
+  const saveEstimation = async () => {
+    try {
+      setSaving(true);
+      await api.saveEstimation({
+        project_description: projectDescription,
+        use_cases: questionnaireData.useCases.map((uc) => ({
+          id: uc.id,
+          name: uc.name,
+          description: uc.description,
+          complexity: uc.complexity,
+        })),
+        actors: questionnaireData.actors.map((actor) => ({
+          id: actor.id,
+          name: actor.name,
+          description: actor.description,
+          complexity: actor.complexity,
+        })),
+        technical_factors: questionnaireData.technicalFactors.map((tf) => ({
+          code: tf.code,
+          name: tf.name,
+          description: tf.description,
+          weight: tf.weight,
+          perceived_complexity: tf.perceivedComplexity,
+        })),
+        environmental_factors: questionnaireData.environmentalFactors.map((ef) => ({
+          code: ef.code,
+          name: ef.name,
+          description: ef.description,
+          weight: ef.weight,
+          perceived_complexity: ef.perceivedComplexity,
+        })),
+        ucp_result: {
+          uucw: estimation.uucw,
+          uaw: estimation.uaw,
+          uucp: estimation.uucp,
+          tcf: estimation.tcf,
+          ecf: estimation.ecf,
+          ucp: estimation.ucp,
+          productivity_factor: estimation.productivityFactor,
+          estimated_hours: estimation.estimatedHours,
+          estimated_days: estimation.estimatedDays,
+        },
+      });
+      setSaved(true);
+    } catch (error) {
+      console.error("Errore nel salvataggio della stima:", error);
+      // Non blocchiamo l'utente se il salvataggio fallisce
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const exportToTxt = () => {
     const content = `ERNESTIMA - STIMA PROGETTO SOFTWARE
 METODO USE CASE POINTS (UCP)
@@ -144,6 +210,17 @@ Generato il: ${new Date().toLocaleString('it-IT')}
               </div>
             </section>
 
+            {saving && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-blue-800">Salvataggio in corso...</p>
+              </div>
+            )}
+            {saved && !saving && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                <p className="text-green-800">✓ Stima salvata con successo!</p>
+              </div>
+            )}
+
             <div className="flex justify-center gap-4 pt-6">
               <button
                 onClick={exportToTxt}
@@ -152,7 +229,13 @@ Generato il: ${new Date().toLocaleString('it-IT')}
                 Esporta in TXT
               </button>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => navigate("/estimations")}
+                className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-semibold"
+              >
+                Vedi Storico Stime
+              </button>
+              <button
+                onClick={() => navigate("/")}
                 className="px-6 py-3 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-semibold"
               >
                 Nuova Stima

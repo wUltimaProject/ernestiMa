@@ -46,6 +46,8 @@ Thumbs.db
 # Logs
 logs/
 *.log
+backend.log
+frontend.log
 
 # Excel files (keep template)
 !UUCP_3.0_1311 3.xlsx

@@ -1,0 +1,15 @@
+{
+  "name": "ernestima",
+  "version": "1.0.0",
+  "description": "ErnestiMa - Software project estimation using UCP method",
+  "scripts": {
+    "deploy": "./deploy.sh",
+    "setup-db": "./setup-database.sh",
+    "start": "./start.sh",
+    "stop": "./stop.sh"
+  },
+  "keywords": ["ucp", "estimation", "software"],
+  "author": "",
+  "license": "MIT"
+}
+

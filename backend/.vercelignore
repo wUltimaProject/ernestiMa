@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+*.db
+*.sqlite
+.env
+*.log
+scripts/
+ucp_estimation.db
+
