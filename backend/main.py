@@ -50,3 +50,9 @@ async def root():
 async def health():
     return {"status": "healthy"}
 
+# Vercel serverless function wrapper
+# Only create handler when running on Vercel (not in local development)
+if os.getenv("VERCEL"):
+    from mangum import Mangum
+    handler = Mangum(app, lifespan="off")
+
