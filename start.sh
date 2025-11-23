@@ -30,7 +30,7 @@ kill_port 8000
 
 # Avvia Backend
 echo -e "${GREEN}📦 Avvio Backend...${NC}"
-cd backend
+cd api
 
 # Crea venv se non esiste
 if [ ! -d "venv" ]; then

@@ -5,29 +5,11 @@ This file is used when deploying to Vercel
 import sys
 import os
 
-# Debug: print to verify this file is being executed
-print("🔍 backend/api/index.py is being loaded...", file=sys.stderr)
-print(f"🔍 Current working directory: {os.getcwd()}", file=sys.stderr)
-print(f"🔍 __file__ path: {__file__}", file=sys.stderr)
-
-# Get absolute path to backend directory
-# This file is in backend/api/index.py
-# We need to add backend/ to sys.path to import main
-current_file = os.path.abspath(__file__)
-api_dir = os.path.dirname(current_file)  # backend/api/
-backend_dir = os.path.dirname(api_dir)   # backend/
-
-# Add backend directory to Python path if not already there
-if backend_dir not in sys.path:
-    sys.path.insert(0, backend_dir)
-
-# Verify we can find main.py
-main_path = os.path.join(backend_dir, 'main.py')
-if not os.path.exists(main_path):
-    raise ImportError(f"Cannot find main.py at {main_path}. Current working directory: {os.getcwd()}")
+# Add parent directory to path so we can import from backend
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from mangum import Mangum
 from main import app
 
 # Wrap FastAPI app with Mangum for AWS Lambda/Vercel compatibility
-handler = Mangum(app, lifespan="off")
+handler = Mangum(app)
