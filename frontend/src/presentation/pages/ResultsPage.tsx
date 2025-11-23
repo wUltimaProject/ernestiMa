@@ -3,14 +3,21 @@
  */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UCPEstimation, QuestionnaireState } from "../../domain/types";
+import { UCPEstimation, UseCase, Actor, TechnicalFactor, EnvironmentalFactor } from "../../domain/types";
 import { GlassesIcon } from "../components/GlassesIcon";
 import { api } from "../../infrastructure/api";
+
+interface QuestionnaireData {
+  useCases: UseCase[];
+  actors: Actor[];
+  technicalFactors: TechnicalFactor[];
+  environmentalFactors: EnvironmentalFactor[];
+}
 
 interface ResultsPageProps {
   estimation: UCPEstimation;
   projectDescription: string;
-  questionnaireData: QuestionnaireState;
+  questionnaireData: QuestionnaireData;
 }
 
 export function ResultsPage({ estimation, projectDescription, questionnaireData }: ResultsPageProps) {
