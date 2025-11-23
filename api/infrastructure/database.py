@@ -5,19 +5,27 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 # Database URL - supports both DATABASE_URL and POSTGRES_URL (from Vercel Supabase integration)
 # Vercel Supabase integration provides POSTGRES_URL, but we also support DATABASE_URL for flexibility
-DATABASE_URL = os.getenv(
-    "POSTGRES_URL",  # Vercel Supabase integration uses this
-    os.getenv(
-        "DATABASE_URL",  # Fallback for manual configuration
-        "sqlite:///./ucp_estimation.db"  # Default to SQLite for local development
-    )
-)
+POSTGRES_URL = os.getenv("POSTGRES_URL")
+DATABASE_URL_ENV = os.getenv("DATABASE_URL")
+
+DATABASE_URL = POSTGRES_URL or DATABASE_URL_ENV or "sqlite:///./ucp_estimation.db"
+
+# Log which database URL is being used (without exposing credentials)
+if POSTGRES_URL:
+    logger.info("Using POSTGRES_URL from environment")
+elif DATABASE_URL_ENV:
+    logger.info("Using DATABASE_URL from environment")
+else:
+    logger.warning("No database URL found in environment, using SQLite default")
 
 # For SQLite, we need to disable check_same_thread
 if DATABASE_URL.startswith("sqlite"):
