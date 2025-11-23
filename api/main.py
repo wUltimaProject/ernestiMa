@@ -1,13 +1,34 @@
 """
 FastAPI application entry point
 """
+import logging
+import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from infrastructure.database import engine, Base
-from presentation.routes import router
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Configure logging to see errors in Vercel logs
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger(__name__)
+
+try:
+    from infrastructure.database import engine, Base
+    from presentation.routes import router
+    
+    # Create database tables (with error handling)
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables created successfully")
+    except Exception as db_error:
+        logger.error(f"Failed to create database tables: {db_error}", exc_info=True)
+        # Continue anyway - health endpoint will still work
+        router = None
+except Exception as import_error:
+    logger.error(f"Failed to import database/routes: {import_error}", exc_info=True)
+    router = None
 
 app = FastAPI(
     title="ErnestiMa API",
@@ -38,8 +59,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(router)
+# Include routers (only if available)
+if router:
+    app.include_router(router)
+else:
+    logger.warning("Router not available - database routes will not work")
 
 
 @app.get("/")
@@ -49,7 +73,21 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy"}
+    """Health check endpoint - works even if database is not available"""
+    try:
+        # Try to check database connection
+        from infrastructure.database import engine
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        db_status = "connected"
+    except Exception as e:
+        logger.warning(f"Database health check failed: {e}")
+        db_status = "disconnected"
+    
+    return {
+        "status": "healthy",
+        "database": db_status
+    }
 
 # Vercel serverless function wrapper
 # Vercel automatically detects this when api/main.py is used as entry point
