@@ -41,12 +41,17 @@ app.add_middleware(
 app.include_router(router)
 
 
-@app.get("/api/")
+@app.get("/")
 async def root():
     return {"message": "ErnestiMa API", "version": "1.0.0"}
 
 
-@app.get("/api/health")
+@app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+# Vercel serverless function wrapper
+# Vercel automatically detects this when api/main.py is used as entry point
+from mangum import Mangum
+handler = Mangum(app, lifespan="off")
 
