@@ -3,11 +3,28 @@ FastAPI application entry point
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from infrastructure.database import engine, Base
-from presentation.routes import router
+import logging
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Try to import database and routes, but don't fail if database is not available
+try:
+    from infrastructure.database import engine, Base
+    from presentation.routes import router
+    
+    # Create database tables (only if database is available)
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database connection successful")
+    except Exception as db_error:
+        logger.warning(f"Database initialization failed: {db_error}")
+        # Continue without database - health endpoint will still work
+        router = None
+except Exception as import_error:
+    logger.error(f"Failed to import database/routes: {import_error}")
+    router = None
 
 app = FastAPI(
     title="ErnestiMa API",
@@ -38,8 +55,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(router)
+# Include routers (only if available)
+if router:
+    app.include_router(router)
 
 
 @app.get("/")
