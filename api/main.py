@@ -21,13 +21,14 @@ allowed_origins = os.getenv(
     "CORS_ORIGINS",
     "http://localhost:3002,http://localhost:3000"
 ).split(",")
-# Add Vercel domain if in production
+# Add Vercel backend domain if in production (for API docs)
 if os.getenv("VERCEL_URL"):
     vercel_url = f"https://{os.getenv('VERCEL_URL')}"
     allowed_origins.append(vercel_url)
-# Add custom domain if set
+# Add frontend URL (required for separate Vercel projects)
 if os.getenv("FRONTEND_URL"):
-    allowed_origins.append(os.getenv("FRONTEND_URL"))
+    frontend_urls = os.getenv("FRONTEND_URL").split(",")
+    allowed_origins.extend(frontend_urls)
 
 app.add_middleware(
     CORSMiddleware,
