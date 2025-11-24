@@ -90,8 +90,5 @@ async def health():
         "database": db_status
     }
 
-# Vercel serverless function wrapper
-# Vercel automatically detects this when api/main.py is used as entry point
-from mangum import Mangum
-handler = Mangum(app, lifespan="off")
+# Note: Mangum handler is created in index.py for Vercel serverless compatibility
 
