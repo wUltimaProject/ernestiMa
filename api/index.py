@@ -85,7 +85,7 @@ async def health():
     db_info = {
         "postgres_url_set": bool(postgres_url),
         "database_url_set": bool(database_url),
-        "postgres_url_preview": postgres_url[:30] + "..." if postgres_url and len(postgres_url) > 30 else postgres_url,
+        "postgres_url_preview": (postgres_url[:30] + "..." if postgres_url and len(postgres_url) > 30 else postgres_url) if postgres_url else None,
     }
     
     try:
