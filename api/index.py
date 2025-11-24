@@ -3,6 +3,15 @@ FastAPI application entry point
 """
 import logging
 import sys
+import os
+from pathlib import Path
+
+# Add api/ directory to Python path for Vercel serverless function
+# When Vercel executes api/index.py, it needs to know where to find infrastructure modules
+api_dir = Path(__file__).parent
+if str(api_dir) not in sys.path:
+    sys.path.insert(0, str(api_dir))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
