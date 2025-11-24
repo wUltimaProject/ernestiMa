@@ -90,5 +90,6 @@ async def health():
         "database": db_status
     }
 
-# Note: Mangum handler is created in index.py for Vercel serverless compatibility
+# Vercel automatically detects FastAPI when it finds 'app = FastAPI()' in main.py
+# No need for Mangum wrapper - Vercel handles it automatically
 
