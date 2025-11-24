@@ -24,13 +24,9 @@ def convert_to_pooler_url(url: str) -> str:
     """Convert Supabase direct connection to pooler connection for serverless compatibility"""
     if url and "supabase.co:5432" in url:
         # Replace port 5432 with 6543 (pooler port)
+        # The pooler uses IPv4 and works with Vercel serverless functions
         url = url.replace(":5432/", ":6543/")
-        # Add ?pgbouncer=true if not present
-        if "?" not in url:
-            url += "?pgbouncer=true"
-        elif "pgbouncer" not in url:
-            url += "&pgbouncer=true"
-        logger.info("Converted Supabase direct connection to pooler connection")
+        logger.info("Converted Supabase direct connection to pooler connection (port 6543)")
     return url
 
 DATABASE_URL = POSTGRES_URL or DATABASE_URL_ENV or "sqlite:///./ucp_estimation.db"
