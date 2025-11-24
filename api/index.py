@@ -35,9 +35,11 @@ try:
         logger.error(f"Failed to create database tables: {db_error}", exc_info=True)
         # Continue anyway - health endpoint will still work
         router = None
+    db_engine = engine  # Store engine for use in health endpoint
 except Exception as import_error:
     logger.error(f"Failed to import database/routes: {import_error}", exc_info=True)
     router = None
+    db_engine = None
 
 app = FastAPI(
     title="ErnestiMa API",
@@ -84,7 +86,6 @@ async def root():
 async def health():
     """Health check endpoint - works even if database is not available"""
     import os
-    from infrastructure.database import engine
     from sqlalchemy import text
     
     # Check if database URL is configured
@@ -97,9 +98,17 @@ async def health():
         "postgres_url_preview": (postgres_url[:30] + "..." if postgres_url and len(postgres_url) > 30 else postgres_url) if postgres_url else None,
     }
     
+    # Use engine imported at module level (if available)
+    if db_engine is None:
+        return {
+            "status": "healthy",
+            "database": "disconnected",
+            "db_info": {**db_info, "error": "Database engine not initialized"}
+        }
+    
     try:
         # Try to check database connection
-        with engine.connect() as conn:
+        with db_engine.connect() as conn:
             result = conn.execute(text("SELECT 1"))
             result.fetchone()
         db_status = "connected"
