@@ -74,20 +74,37 @@ async def root():
 @app.get("/health")
 async def health():
     """Health check endpoint - works even if database is not available"""
+    import os
+    from infrastructure.database import engine
+    from sqlalchemy import text
+    
+    # Check if database URL is configured
+    postgres_url = os.getenv("POSTGRES_URL")
+    database_url = os.getenv("DATABASE_URL")
+    
+    db_info = {
+        "postgres_url_set": bool(postgres_url),
+        "database_url_set": bool(database_url),
+        "postgres_url_preview": postgres_url[:30] + "..." if postgres_url and len(postgres_url) > 30 else postgres_url,
+    }
+    
     try:
         # Try to check database connection
-        from infrastructure.database import engine
-        from sqlalchemy import text
         with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
+            result = conn.execute(text("SELECT 1"))
+            result.fetchone()
         db_status = "connected"
+        error = None
     except Exception as e:
-        logger.warning(f"Database health check failed: {e}")
+        logger.error(f"Database health check failed: {e}", exc_info=True)
         db_status = "disconnected"
+        error = str(e)
+        db_info["error"] = error
     
     return {
         "status": "healthy",
-        "database": db_status
+        "database": db_status,
+        "db_info": db_info
     }
 
 # Vercel automatically detects FastAPI when it finds 'app = FastAPI()' in index.py
