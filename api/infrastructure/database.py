@@ -14,10 +14,30 @@ logger = logging.getLogger(__name__)
 
 # Database URL - supports both DATABASE_URL and POSTGRES_URL (from Vercel Supabase integration)
 # Vercel Supabase integration provides POSTGRES_URL, but we also support DATABASE_URL for flexibility
+# For Supabase with Vercel serverless, use pooler connection string (port 6543) instead of direct (port 5432)
+# Pooler uses IPv4 and works better with serverless functions
 POSTGRES_URL = os.getenv("POSTGRES_URL")
 DATABASE_URL_ENV = os.getenv("DATABASE_URL")
 
+# Convert Supabase direct connection (port 5432) to pooler connection (port 6543) for serverless compatibility
+def convert_to_pooler_url(url: str) -> str:
+    """Convert Supabase direct connection to pooler connection for serverless compatibility"""
+    if url and "supabase.co:5432" in url:
+        # Replace port 5432 with 6543 (pooler port)
+        url = url.replace(":5432/", ":6543/")
+        # Add ?pgbouncer=true if not present
+        if "?" not in url:
+            url += "?pgbouncer=true"
+        elif "pgbouncer" not in url:
+            url += "&pgbouncer=true"
+        logger.info("Converted Supabase direct connection to pooler connection")
+    return url
+
 DATABASE_URL = POSTGRES_URL or DATABASE_URL_ENV or "sqlite:///./ucp_estimation.db"
+
+# Convert to pooler if it's a Supabase direct connection
+if DATABASE_URL and not DATABASE_URL.startswith("sqlite"):
+    DATABASE_URL = convert_to_pooler_url(DATABASE_URL)
 
 # Log which database URL is being used (without exposing credentials)
 if POSTGRES_URL:
