@@ -6,6 +6,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 import logging
+import socket
+from urllib.parse import urlparse, urlunparse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,13 +22,60 @@ POSTGRES_URL = os.getenv("POSTGRES_URL")
 DATABASE_URL_ENV = os.getenv("DATABASE_URL")
 
 # Convert Supabase direct connection (port 5432) to pooler connection (port 6543) for serverless compatibility
+# Also force IPv4 by resolving hostname to IPv4 address (Vercel serverless doesn't support IPv6)
 def convert_to_pooler_url(url: str) -> str:
     """Convert Supabase direct connection to pooler connection for serverless compatibility"""
-    if url and "supabase.co:5432" in url:
-        # Replace port 5432 with 6543 (pooler port)
-        # The pooler uses IPv4 and works with Vercel serverless functions
-        url = url.replace(":5432/", ":6543/")
-        logger.info("Converted Supabase direct connection to pooler connection (port 6543)")
+    if url and "supabase.co" in url:
+        try:
+            # Parse the connection string
+            parsed = urlparse(url)
+            
+            # Convert port 5432 to 6543 (pooler port)
+            if parsed.port == 5432:
+                port = 6543
+            else:
+                port = parsed.port or 5432
+            
+            # Resolve hostname to IPv4 address (force IPv4, not IPv6)
+            hostname = parsed.hostname
+            if hostname:
+                try:
+                    # Get IPv4 address only
+                    ipv4 = socket.gethostbyname(hostname)
+                    logger.info(f"Resolved {hostname} to IPv4: {ipv4}")
+                    
+                    # Replace hostname with IPv4 address in connection string
+                    # Format: postgresql://user:pass@ipv4:port/db
+                    netloc = f"{parsed.username}:{parsed.password}@{ipv4}:{port}"
+                    if parsed.port:
+                        url = urlunparse((
+                            parsed.scheme,
+                            netloc,
+                            parsed.path,
+                            parsed.params,
+                            parsed.query,
+                            parsed.fragment
+                        ))
+                    else:
+                        # If no port was in original, we need to add it
+                        url = url.replace(f"@{hostname}/", f"@{ipv4}:{port}/")
+                    
+                    logger.info("Converted Supabase connection to pooler with IPv4 address")
+                except socket.gaierror as e:
+                    logger.warning(f"Could not resolve {hostname} to IPv4: {e}. Using original hostname.")
+                    # Fallback: just change port
+                    if ":5432/" in url:
+                        url = url.replace(":5432/", ":6543/")
+            else:
+                # Fallback: just change port
+                if ":5432/" in url:
+                    url = url.replace(":5432/", ":6543/")
+        except Exception as e:
+            logger.error(f"Error converting connection string: {e}")
+            # Fallback: just change port
+            if ":5432/" in url:
+                url = url.replace(":5432/", ":6543/")
+    
     return url
 
 DATABASE_URL = POSTGRES_URL or DATABASE_URL_ENV or "sqlite:///./ucp_estimation.db"
