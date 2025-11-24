@@ -30,7 +30,7 @@ kill_port 8000
 
 # Avvia Backend
 echo -e "${GREEN}📦 Avvio Backend...${NC}"
-cd backend
+cd api
 
 # Crea venv se non esiste
 if [ ! -d "venv" ]; then
@@ -54,7 +54,7 @@ if [ ! -f "ucp_estimation.db" ]; then
 fi
 
 # Avvia backend in background
-uvicorn main:app --reload --host 0.0.0.0 --port 8000 > ../backend.log 2>&1 &
+uvicorn index:app --reload --host 0.0.0.0 --port 8000 > ../backend.log 2>&1 &
 BACKEND_PID=$!
 echo "Backend avviato (PID: $BACKEND_PID) su http://localhost:8000"
 
