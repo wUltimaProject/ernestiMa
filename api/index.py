@@ -72,8 +72,14 @@ if os.getenv("VERCEL_URL"):
     allowed_origins.append(vercel_url)
 # Add frontend URL (required for separate Vercel projects)
 if os.getenv("FRONTEND_URL"):
-    frontend_urls = os.getenv("FRONTEND_URL").split(",")
+    frontend_urls = [url.strip() for url in os.getenv("FRONTEND_URL").split(",")]
     allowed_origins.extend(frontend_urls)
+
+# Log allowed origins for debugging (without exposing full URLs)
+logger.info(f"CORS configured with {len(allowed_origins)} allowed origins")
+for origin in allowed_origins:
+    if origin:
+        logger.info(f"  - {origin[:30]}..." if len(origin) > 30 else f"  - {origin}")
 
 app.add_middleware(
     CORSMiddleware,

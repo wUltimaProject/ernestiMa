@@ -3,7 +3,14 @@
  */
 
 // In produzione usa l'URL assoluto, in sviluppo usa il proxy
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+// VITE_API_URL deve includere /api alla fine (es: https://backend.vercel.app/api)
+let API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
+// Se VITE_API_URL è impostato ma non termina con /api, aggiungilo
+if (API_BASE_URL !== "/api" && !API_BASE_URL.endsWith("/api")) {
+  // Rimuovi trailing slash se presente, poi aggiungi /api
+  API_BASE_URL = API_BASE_URL.replace(/\/$/, "") + "/api";
+}
 
 export interface EstimationListItem {
   id: number;
