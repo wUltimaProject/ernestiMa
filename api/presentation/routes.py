@@ -1,6 +1,7 @@
 """
 API routes for estimations
 """
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -15,6 +16,8 @@ from domain.entities import (
     UseCase, Actor, TechnicalFactor, EnvironmentalFactor,
     UseCaseComplexity, ActorComplexity, UCPEstimation
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/estimations", tags=["estimations"])
 
@@ -101,17 +104,28 @@ async def create_estimation(
 @router.get("/", response_model=List[EstimationListItem])
 async def get_all_estimations(db: Session = Depends(get_db)):
     """Get all estimations"""
-    repository = EstimationRepository(db)
-    estimations = repository.get_all_estimations()
-    
-    return [
-        EstimationListItem(
-            id=est.id,
-            project_description=est.project_description,
-            created_at=est.created_at
+    try:
+        logger.info("Getting all estimations...")
+        repository = EstimationRepository(db)
+        estimations = repository.get_all_estimations()
+        logger.info(f"Found {len(estimations)} estimations")
+        
+        result = [
+            EstimationListItem(
+                id=est.id,
+                project_description=est.project_description,
+                created_at=est.created_at
+            )
+            for est in estimations
+        ]
+        logger.info("Successfully serialized estimations")
+        return result
+    except Exception as e:
+        logger.error(f"Error getting all estimations: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Errore nel recupero delle stime: {str(e)}"
         )
-        for est in estimations
-    ]
 
 
 @router.get("/{estimation_id}", response_model=EstimationDetail)

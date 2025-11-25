@@ -1,13 +1,17 @@
 """
 Repository for database operations
 """
+import logging
 from typing import List, Optional
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from infrastructure.models import Estimation
 from domain.entities import (
     UseCase, Actor, TechnicalFactor, EnvironmentalFactor, UCPEstimation
 )
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 
 class EstimationRepository:
@@ -94,7 +98,17 @@ class EstimationRepository:
     
     def get_all_estimations(self) -> List[Estimation]:
         """Get all estimations ordered by creation date (newest first)"""
-        return self.db.query(Estimation).order_by(Estimation.created_at.desc()).all()
+        try:
+            logger.info("Querying database for all estimations...")
+            estimations = self.db.query(Estimation).order_by(Estimation.created_at.desc()).all()
+            logger.info(f"Successfully retrieved {len(estimations)} estimations from database")
+            return estimations
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while getting estimations: {e}", exc_info=True)
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error while getting estimations: {e}", exc_info=True)
+            raise
     
     def get_estimation_by_id(self, estimation_id: int) -> Optional[Estimation]:
         """Get a specific estimation by ID"""
