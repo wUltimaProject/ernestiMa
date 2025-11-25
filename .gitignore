@@ -52,3 +52,6 @@ frontend.log
 # Excel files (keep template)
 !UUCP_3.0_1311 3.xlsx
 
+# Documentation files
+DEPLOY_LESSONS_LEARNED.md
+

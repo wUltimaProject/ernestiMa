@@ -29,11 +29,24 @@ try:
     
     # Create database tables (with error handling)
     try:
+        logger.info("Attempting to create database tables...")
         Base.metadata.create_all(bind=engine)
         logger.info("Database tables created successfully")
+        
+        # Verify that tables exist by trying to query
+        from infrastructure.models import Estimation
+        with engine.connect() as conn:
+            from sqlalchemy import inspect
+            inspector = inspect(engine)
+            tables = inspector.get_table_names()
+            logger.info(f"Database tables found: {tables}")
+            if "estimations" not in tables:
+                logger.warning("Table 'estimations' not found, attempting to create again...")
+                Base.metadata.create_all(bind=engine)
     except Exception as db_error:
         logger.error(f"Failed to create database tables: {db_error}", exc_info=True)
         # Continue anyway - health endpoint will still work
+        # But router will be None, so API endpoints won't work
         router = None
     db_engine = engine  # Store engine for use in health endpoint
 except Exception as import_error:
@@ -71,8 +84,10 @@ app.add_middleware(
 )
 
 # Include routers (only if available)
+# Add /api prefix to match both local proxy and Vercel routing
 if router:
-    app.include_router(router)
+    app.include_router(router, prefix="/api")
+    logger.info("Router included successfully with prefix /api")
 else:
     logger.warning("Router not available - database routes will not work")
 
